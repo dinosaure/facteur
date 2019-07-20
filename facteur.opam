@@ -1,0 +1,30 @@
+opam-version: "2.0"
+name:         "facteur"
+license:      "MIT"
+authors:      [ "Romain Calascibetta <romain.calascibetta@gmail.com>" ]
+maintainer:   [ "Romain Calascibetta <romain.calascibetta@gmail.com>" ]
+homepage:     "https://github.com/dinosaure/facteur"
+bug-reports:  "https://github.com/dinosaure/facteur/issues"
+dev-repo:     "git+https://github.com/dinosaure/facteur.git"
+synopsis:     "Tool to send an email"
+description: """Tool to send an email in OCaml
+"""
+
+build: [ "dune" "build" "-p" name "-j" jobs ]
+run-test: [ "dune" "runtest" "-p" name "-j" jobs ]
+
+
+pin-depends: [
+  [ "mrmime.dev" "git+https://github.com/mirage/mrmime.git" ]
+  [ "colombe.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
+  [ "sendmail.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
+  [ "sendmail-lwt.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
+]
+
+depends: [
+  "ocaml"      {>= "4.03.0"}
+  "mrmime"
+  "colombe"
+  "sendmail"
+  "dune"       {build}
+]
