@@ -28,3 +28,12 @@ production where it deserves mostly a deep work about API on [mrmime][mrmime] or
 [colombe][colombe] mainly.
 
 However, it works (mostly)!
+
+[mrmime]: https://github.com/mirage/mrmime.git
+[colombe]: https://github.com/dinosaure/colombe.git
+[sendmail]: https://github.com/dinosaure/colombe.git
+[emile]: https://github.com/dinosaure/emile.git
+[rosetta]: https://github.com/mirage/rosetta.git
+[base64]: https://github.com/mirage/ocaml-base64.git
+[pecu]: https://github.com/mirage/pecu.git
+[angstrom]: https://github.com/inhabitedtype/angstrom.git
