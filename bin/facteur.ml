@@ -3,14 +3,6 @@ module Sendmail_handler = Sendmail_handler
 
 let ( <.> ) f g = fun x -> f (g x)
 
-let fold_result f a l =
-  List.fold_left
-    (fun a x -> match a, x with
-       | (Error _ as err), _ -> err
-       | _, (Error _ as err) -> err
-       | Ok a, Ok x -> f a x)
-    (Ok a) l
-
 module Result = struct
   let fold l =
     let open Rresult.R in
@@ -68,19 +60,21 @@ let attachment_to_part ~magic (e, path) =
       let open Mrmime.Content in
       let c =
         let open Mrmime.Content_type in
-        make ty_v subty_v Parameters.(of_list [ k "filename", v (Fpath.basename path) ]) in
+        make ty_v subty_v Parameters.empty in
       make ~encoding:e c in
+    let content_disposition = Rfc2183.content_disposition (Fpath.basename path) in
+    let content = Mrmime.Content.add content_disposition content in
     let ic = open_in (Fpath.to_string path) in
     Ok (Mrmime.Mt.part ~content (stream_of_ic ~close_in:(fun _ -> ()) ic))
 
 let mail ~date ~zone ~from ~sender ~subject ~recipients ~encoding:e ~parameters:p ~body ~attachments =
   let open Mrmime in
   let date = match date with
-    | Some (ptime, None) -> Rresult.R.get_ok (Date.of_ptime ~zone ptime)
+    | Some (ptime, None) -> Date.of_ptime ~zone ptime
     | Some (ptime, Some tz) ->
       let hh, mm = tz / 3600, abs (tz mod 3600 / 60) in
-      Rresult.R.get_ok (Date.of_ptime ~zone:(Rresult.R.get_ok Date.Zone.(tz hh mm)) ptime)
-    | None -> Rresult.R.get_ok (Date.of_ptime ~zone (Ptime_clock.now ())) in
+      Date.of_ptime ~zone:(Rresult.R.get_ok Date.Zone.(tz hh mm)) ptime
+    | None -> Date.of_ptime ~zone (Ptime_clock.now ()) in
   let header =
     let open Header in
     Field.(Date $ date)
@@ -189,9 +183,7 @@ let run
     auth >>= fun authenticator ->
     List.map (fun x -> Emile_mrmime.to_mrmime x >>= Colombe_mrmime.to_forward_path) recipients |> Result.fold >>= fun recipients ->
     mail >>= fun mail ->
-    let stream = stream_map
-        (fun (buf, off, len) -> (Bytes.unsafe_of_string buf, off, len))
-        (Mrmime.Mt.to_stream mail) in
+    let stream = Mrmime.Mt.to_stream mail in
     let fiber =
       let open Lwt.Infix in
       X509_handler.authenticator tls >>= fun tls ->

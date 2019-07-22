@@ -9,3 +9,8 @@
  (name zone)
  (modules zone)
  (c_names zone_stubs))
+
+(library
+ (name rfc2183)
+ (modules rfc2183)
+ (libraries zone astring mrmime))

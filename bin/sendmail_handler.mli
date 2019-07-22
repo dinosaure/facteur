@@ -6,7 +6,7 @@ val run_with_starttls :
   tls:X509.Authenticator.a ->
   from:Colombe.Reverse_path.t ->
   recipients:Colombe.Forward_path.t list ->
-  (bytes * int * int) Sendmail.stream ->
+  (string * int * int) Sendmail.stream ->
   unit Cmdliner.Term.ret Lwt.t
 
 val run :
@@ -17,5 +17,5 @@ val run :
   tls:X509.Authenticator.a ->
   from:Colombe.Reverse_path.t ->
   recipients:Colombe.Forward_path.t list ->
-  (bytes * int * int) Sendmail.stream ->
+  (string * int * int) Sendmail.stream ->
   unit Cmdliner.Term.ret Lwt.t
