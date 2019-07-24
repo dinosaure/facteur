@@ -2,7 +2,7 @@ let to_unstrctrd = function
   | `Token v -> v
   | `String v -> Astring.strf "\"%s\"" v
 
-let content_disposition ?zone ?size ?c_time ?a_time ?m_time filename =
+let content_disposition ?(ty= `Attachment) ?zone ?size ?c_time ?a_time ?m_time filename =
   let open Mrmime in
   let zone = match zone with
     | None ->
@@ -13,7 +13,10 @@ let content_disposition ?zone ?size ?c_time ?a_time ?m_time filename =
   let filename = Content_type.Parameters.v filename in
   let Content_field.Field_name content_disposition =
     Content_field.of_field_name (Field_name.v "Content-Disposition") in
-  let value = Unstructured.[ v "filename"; v "="; v (to_unstrctrd filename) ] in
+  let value = match ty with
+    | `Inline -> Unstructured.[ v "inline"; v ";"; sp 1 ]
+    | `Attachment -> Unstructured.[ v "attachment"; v ";"; sp 1 ] in
+  let value = value @ Unstructured.[ v "filename"; v "="; v (to_unstrctrd filename) ] in
   let value = match size with
     | None -> value
     | Some size ->
