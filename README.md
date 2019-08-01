@@ -16,10 +16,26 @@ milestone of several projects to implement the SMTP stack on MirageOS:
   mail address between [colombe][colombe] (RFC 5321) and [mrmime][mrmime] (RFC
   5322).
   
-Of course, `facteur` uses several libraries of course. [mrmime][mrmime] uses
+Of course, `facteur` uses several libraries. [mrmime][mrmime] uses
 [rosetta][rosetta] to decode any encoding to Unicode. It uses [base64][base64]
 or [pecu][pecu] as encoder/decoder of bodies. Or [angstrom][angstrom] as the
-main library to describe (a)BNF of mails.
+main library to describe (a)BNF of emails.
+
+## Internal libraries
+
+`facteur` needs `libmagic` to be able to recognize kind of your files. It
+implements a C stubs and depends on an UNIX environment. In other side,
+`facteur` has an other internal library, `rfc2183` which wants to emit a
+`Content-Disposition` field. This library is on top of [mrmime][mrmime].
+
+## SMTP details
+
+`facteur` wants to use two ways to send an email. The first one wraps entirely a
+SMTP flow with TLS (with [ocaml-tls][ocaml-tls]). The second way is to start a
+SMTP flow and try to establish a TLS flow with STARTTLS.
+
+Of course, the first way is better than the second. If both are not available,
+we are not able to send an email.
 
 ## Experimental 
 

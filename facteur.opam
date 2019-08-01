@@ -7,24 +7,27 @@ homepage:     "https://github.com/dinosaure/facteur"
 bug-reports:  "https://github.com/dinosaure/facteur/issues"
 dev-repo:     "git+https://github.com/dinosaure/facteur.git"
 synopsis:     "Tool to send an email"
-description: """Tool to send an email in OCaml
+description: """Tool to send an email in OCaml according RFC4409 [SUBMIT]
 """
 
 build: [ "dune" "build" "-p" name "-j" jobs ]
 run-test: [ "dune" "runtest" "-p" name "-j" jobs ]
 
-pin-depends: [
-  [ "mrmime.dev" "git+https://github.com/mirage/mrmime.git" ]
-  [ "colombe.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
-  [ "sendmail.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
-  [ "sendmail-lwt.dev" "git+https://github.com/dinosaure/colombe.git#gadt" ]
-  [ "emile.dev" "git+https://github.com/dinosaure/emile.git" ]
-]
-
 depends: [
-  "ocaml"      {>= "4.03.0"}
+  "ocaml" {>= "4.03.0"}
   "mrmime"
   "colombe"
-  "sendmail"
-  "dune"       {build}
+  "sendmail-lwt"
+  "logs"
+  "fmt"
+  "astring"
+  "fpath"
+  "cmdliner"
+  "emile" {>= "0.5"}
+  "dune" {>= "1.3"}
+]
+
+conflicts: [
+  "mrmime" {< "0.1.0"}
+  "colombe" {< "0.1.0"}
 ]
