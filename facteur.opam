@@ -23,6 +23,7 @@ depends: [
   "astring"
   "fpath"
   "cmdliner"
+  "x509" {>= "0.7.0"}
   "emile" {>= "0.5"}
   "dune" {>= "1.3"}
 ]
