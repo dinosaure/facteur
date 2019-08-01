@@ -3,7 +3,7 @@ val run_with_starttls :
   hostname:[ `host ] Domain_name.t -> ?port:int ->
   domain:Colombe.Domain.t ->
   authenticator:Auth.authenticator option ->
-  tls:X509.Authenticator.a ->
+  tls:X509.Authenticator.t ->
   from:Colombe.Reverse_path.t ->
   recipients:Colombe.Forward_path.t list ->
   (string * int * int) Sendmail.stream ->
@@ -14,7 +14,7 @@ val run :
   hostname:[ `host ] Domain_name.t -> ?port:int ->
   domain:Colombe.Domain.t ->
   authenticator:Auth.authenticator option ->
-  tls:X509.Authenticator.a ->
+  tls:X509.Authenticator.t ->
   from:Colombe.Reverse_path.t ->
   recipients:Colombe.Forward_path.t list ->
   (string * int * int) Sendmail.stream ->
