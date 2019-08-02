@@ -1,5 +1,5 @@
-type p = X509.t list * Nocrypto.Rsa.priv
-type authenticator = X509.Authenticator.a
+type p = X509.Private_key.t list * Nocrypto.Rsa.priv
+type authenticator = X509.Authenticator.t
 
 let ( <.> ) f g = fun x -> f (g x)
 
@@ -18,33 +18,35 @@ let load_file path =
 
 let private_of_pems ~cert ~pk =
   let open Lwt.Infix in
-  let open X509.Encoding.Pem in
+  let open X509 in
   load_file cert
-  >|= (Certificate.of_pem_cstruct <.> Cstruct.of_string)
+  >|= (Certificate.decode_pem <.> Cstruct.of_string)
+  >|= Rresult.R.get_ok
   >>= fun certs ->
   load_file pk
-  >|= (Private_key.of_pem_cstruct1 <.> Cstruct.of_string)
+  >|= (Certificate.decode_pem_multiple <.> Cstruct.of_string)
+  >|= Rresult.R.get_ok
   >|= fun pk -> Ok (certs, pk)
 
 let certs_of_pem path =
   let open Lwt.Infix in
   load_file path
-  >|= (X509.Encoding.Pem.Certificate.of_pem_cstruct <.> Cstruct.of_string)
+  >|= (X509.Certificate.decode_pem <.> Cstruct.of_string)
+  >|= Rresult.R.get_ok
 
 let certs_of_pem_directory ?(ext= "crt") path =
   let open Lwt.Infix in
   load_directory path
   >>= Lwt_list.filter_p (Lwt.return <.> Fpath.has_ext ext)
   >>= Lwt_list.map_p certs_of_pem
-  >|= List.concat
 
 let authenticator meth =
   let now = Ptime_clock.now () in
-  let make v = X509.Authenticator.chain_of_trust ~time:now v in
+  let make certs = X509.Authenticator.chain_of_trust ~time:now certs in
 
   let open Lwt.Infix in
 
   match meth with
-  | `Ca_file path -> certs_of_pem path >|= make
+  | `Ca_file path -> certs_of_pem path >|= fun x -> make [ x ]
   | `Ca_directory path -> certs_of_pem_directory path >|= make
   | `No_authentication -> Lwt.return X509.Authenticator.null

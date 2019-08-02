@@ -26,7 +26,7 @@ let to_domain_name = function
   | domain -> Rresult.R.error_msgf "Invalid domain: %a" Colombe.Domain.pp domain
 
 let same_domain ~hostname domain =
-  if Domain_name.sub ~subdomain:hostname ~domain
+  if Domain_name.is_subdomain ~subdomain:hostname ~domain
   then Ok domain
   else Rresult.R.error_msgf
       "Domain of sender does not correspond to domain of submission server (sender: %a, submission: %a)"

@@ -23,6 +23,7 @@ depends: [
   "astring"
   "fpath"
   "cmdliner"
+  "domain-name" {>= "0.3.0"}
   "x509" {>= "0.7.0"}
   "emile" {>= "0.5"}
   "dune" {>= "1.3"}
