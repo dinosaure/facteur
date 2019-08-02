@@ -6,6 +6,7 @@ maintainer:   [ "Romain Calascibetta <romain.calascibetta@gmail.com>" ]
 homepage:     "https://github.com/dinosaure/facteur"
 bug-reports:  "https://github.com/dinosaure/facteur/issues"
 dev-repo:     "git+https://github.com/dinosaure/facteur.git"
+doc:          "https://dinosaure.github.io/facteur/"
 synopsis:     "Tool to send an email"
 description: """Tool to send an email in OCaml according RFC4409 [SUBMIT]
 """
